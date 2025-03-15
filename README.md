@@ -1,2 +1,1 @@
-# vaughn_test
-A repository for a web application with API integration
+This repository is empty. Any task executed on it should be considered a new capability and needs to be created.
