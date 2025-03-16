@@ -29,6 +29,29 @@ Create a web application with a backend and frontend that fetches and displays u
 - Write unit tests to calculate the nearest user to each hotel based on latitude and longitude.
 - The following hotels should be used for testing:
   - Hotel A: (-43.9509, -34.4618)
+  - Hotel B: (40.7128, -74.0060)
+  - Hotel C: (34.0522, -118.2437)
+  - Hotel D: (-25.2744, 133.7751)
+
+### Test Cases
+The test suite includes the following test cases:
+
+1. GetNearestUsersAsync
+   - Verifies that the correct nearest user is found for each hotel
+   - Tests with a dataset of 5 users with different geographical locations
+   - Validates that each hotel is matched with its closest user based on coordinates
+
+2. AddUserAsync
+   - Tests the ability to add a new user to the system
+   - Verifies that the new user is assigned a valid ID
+   - Confirms the user is properly added to the collection
+
+3. DeleteUserAsync
+   - Tests successful deletion of an existing user
+   - Verifies handling of deletion attempts for non-existent users
+   - Confirms the user count is updated after deletion
+
+Each test uses a mock HTTP client to simulate API calls and includes test data representing real-world scenarios.
 
 ## Deliverables
 
