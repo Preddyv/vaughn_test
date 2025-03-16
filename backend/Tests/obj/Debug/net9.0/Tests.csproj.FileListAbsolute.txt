@@ -1,0 +1,8 @@
+C:\Users\ropreddy\dev\vaughn_test\backend\Tests\bin\Debug\net9.0\.msCoverageSourceRootsMapping_Tests
+C:\Users\ropreddy\dev\vaughn_test\backend\Tests\bin\Debug\net9.0\CoverletSourceRootsMapping_Tests
+C:\Users\ropreddy\dev\vaughn_test\backend\Tests\obj\Debug\net9.0\Tests.csproj.AssemblyReference.cache
+C:\Users\ropreddy\dev\vaughn_test\backend\Tests\obj\Debug\net9.0\Tests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ropreddy\dev\vaughn_test\backend\Tests\obj\Debug\net9.0\Tests.AssemblyInfoInputs.cache
+C:\Users\ropreddy\dev\vaughn_test\backend\Tests\obj\Debug\net9.0\Tests.AssemblyInfo.cs
+C:\Users\ropreddy\dev\vaughn_test\backend\Tests\obj\Debug\net9.0\Tests.csproj.CoreCompileInputs.cache
+C:\Users\ropreddy\dev\vaughn_test\backend\Tests\obj\Debug\net9.0\Tests.sourcelink.json
