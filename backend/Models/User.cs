@@ -3,22 +3,22 @@ namespace backend.Models
     public class User
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public Address Address { get; set; }
-        public string Phone { get; set; }
-        public string Website { get; set; }
-        public Company Company { get; set; }
+        public required string Name { get; set; }
+        public required string Username { get; set; }
+        public required string Email { get; set; }
+        public required Address Address { get; set; }
+        public required string Phone { get; set; }
+        public required string Website { get; set; }
+        public required Company Company { get; set; }
     }
 
     public class Address
     {
-        public string Street { get; set; }
-        public string Suite { get; set; }
-        public string City { get; set; }
-        public string Zipcode { get; set; }
-        public Geo Geo { get; set; }
+        public required string Street { get; set; }
+        public required string Suite { get; set; }
+        public required string City { get; set; }
+        public required string Zipcode { get; set; }
+        public required Geo Geo { get; set; }
     }
 
     public class Geo
@@ -29,8 +29,8 @@ namespace backend.Models
 
     public class Company
     {
-        public string Name { get; set; }
-        public string CatchPhrase { get; set; }
-        public string Bs { get; set; }
+        public required string Name { get; set; }
+        public required string CatchPhrase { get; set; }
+        public required string Bs { get; set; }
     }
 }
