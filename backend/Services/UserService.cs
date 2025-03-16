@@ -11,6 +11,7 @@ namespace backend.Services
     public interface IUserService
     {
         Task<IEnumerable<User>> GetUsersAsync();
+        Task<User> AddUserAsync(User user);
         Task<User> UpdateUserAsync(User user);
         Task<bool> DeleteUserAsync(int id);
         Task<IEnumerable<User>> GetNearestUsersAsync(List<Hotel> hotels);
@@ -35,6 +36,21 @@ namespace backend.Services
                 _users = JsonConvert.DeserializeObject<List<User>>(response);
             }
             return _users;
+        }
+
+        public async Task<User> AddUserAsync(User user)
+        {
+            // Ensure we have loaded users
+            if (!_users.Any())
+            {
+                await GetUsersAsync();
+            }
+
+            // Generate a new ID (max ID + 1)
+            user.Id = _users.Count > 0 ? _users.Max(u => u.Id) + 1 : 1;
+            
+            _users.Add(user);
+            return await Task.FromResult(user);
         }
 
         public async Task<User> UpdateUserAsync(User user)

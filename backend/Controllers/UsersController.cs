@@ -25,6 +25,13 @@ namespace backend.Controllers
             return Ok(users);
         }
 
+        [HttpPost]
+        public async Task<ActionResult<User>> AddUser([FromBody] User user)
+        {
+            var newUser = await _userService.AddUserAsync(user);
+            return CreatedAtAction(nameof(GetUsers), new { id = newUser.Id }, newUser);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] User user)
         {

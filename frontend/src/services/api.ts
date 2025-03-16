@@ -1,5 +1,42 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
+// Define interfaces for API data structures
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  username?: string;
+  phone?: string;
+  website?: string;
+  address?: Address;
+  company?: Company;
+}
+
+export interface Address {
+  street?: string;
+  suite?: string;
+  city?: string;
+  zipcode?: string;
+  geo?: Geo;
+}
+
+export interface Geo {
+  lat: number;
+  lng: number;
+}
+
+export interface Company {
+  name?: string;
+  catchPhrase?: string;
+  bs?: string;
+}
+
+export interface NewUser {
+  name: string;
+  email: string;
+}
+
+// API client setup
 const apiClient = axios.create({
   baseURL: 'http://localhost:5000/api',
   headers: {
@@ -7,21 +44,51 @@ const apiClient = axios.create({
   },
 });
 
-export const fetchUsers = async () => {
-  const response = await apiClient.get('/users');
-  return response.data;
+// Handle API errors consistently
+const handleApiError = (error: unknown): never => {
+  if (axios.isAxiosError(error)) {
+    const axiosError = error as AxiosError;
+    if (axiosError.response) {
+      throw new Error(`API Error: ${axiosError.response.status} - ${axiosError.response.statusText}`);
+    } else if (axiosError.request) {
+      throw new Error('No response received from the server. Please check your connection.');
+    }
+  }
+  throw new Error('An unexpected error occurred');
 };
 
-export const addUser = async (user) => {
-  const response = await apiClient.post('/users', user);
-  return response.data;
+// API methods
+export const fetchUsers = async (): Promise<User[]> => {
+  try {
+    const response = await apiClient.get<User[]>('/users');
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
 };
 
-export const updateUser = async (id, user) => {
-  const response = await apiClient.put(`/users/${id}`, user);
-  return response.data;
+export const addUser = async (user: NewUser): Promise<User> => {
+  try {
+    const response = await apiClient.post<User>('/users', user);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
 };
 
-export const deleteUser = async (id) => {
-  await apiClient.delete(`/users/${id}`);
+export const updateUser = async (id: number, user: User): Promise<User> => {
+  try {
+    const response = await apiClient.put<User>(`/users/${id}`, user);
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+};
+
+export const deleteUser = async (id: number): Promise<void> => {
+  try {
+    await apiClient.delete(`/users/${id}`);
+  } catch (error) {
+    handleApiError(error);
+  }
 };
