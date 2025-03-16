@@ -29,9 +29,6 @@ Create a web application with a backend and frontend that fetches and displays u
 - Write unit tests to calculate the nearest user to each hotel based on latitude and longitude.
 - The following hotels should be used for testing:
   - Hotel A: (-43.9509, -34.4618)
-  - Hotel B: (40.7128, -74.0060)
-  - Hotel C: (34.0522, -118.2437)
-  - Hotel D: (-25.2744, 133.7751)
 
 ## Deliverables
 
