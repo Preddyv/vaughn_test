@@ -64,8 +64,9 @@ A repository containing:
    ```
 5. Run the project:
    ```
-   dotnet run
+   dotnet run --project Backend/Backend.csproj
    ```
+   The API will be available at `https://localhost:7001` or `http://localhost:5290`
 
 ### Frontend
 
@@ -77,8 +78,9 @@ A repository containing:
    ```
 4. Run the project:
    ```
-   npm run serve
+   npm run dev
    ```
+   The frontend will be available at `http://localhost:5173`
 
 ## Running Unit Tests
 
@@ -87,7 +89,7 @@ A repository containing:
 1. Open the `backend` folder in VS Code.
 2. Run the unit tests:
    ```
-   dotnet test
+   dotnet test Tests/Tests.csproj
    ```
 
 ### Frontend
@@ -97,3 +99,8 @@ A repository containing:
    ```
    npm run test:unit
    ```
+
+## Development Notes
+
+- The repository has a `.gitignore` file that excludes build artifacts, binary files, and other non-source code files.
+- Only commit source code files, configuration files, and documentation to the repository.
