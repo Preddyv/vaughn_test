@@ -32,3 +32,4 @@ C:\Users\ropreddy\dev\vaughn_test\backend\Backend\obj\Debug\net9.0\refint\Backen
 C:\Users\ropreddy\dev\vaughn_test\backend\Backend\obj\Debug\net9.0\Backend.pdb
 C:\Users\ropreddy\dev\vaughn_test\backend\Backend\obj\Debug\net9.0\Backend.genruntimeconfig.cache
 C:\Users\ropreddy\dev\vaughn_test\backend\Backend\obj\Debug\net9.0\ref\Backend.dll
+C:\Users\ropreddy\dev\vaughn_test\backend\Backend\bin\Debug\net9.0\Newtonsoft.Json.dll

@@ -502,7 +502,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
-          "Microsoft.AspNetCore.OpenApi": "9.0.2"
+          "Microsoft.AspNetCore.OpenApi": "9.0.2",
+          "Newtonsoft.Json": "13.0.3"
         },
         "compile": {
           "bin/placeholder/Backend.dll": {}
