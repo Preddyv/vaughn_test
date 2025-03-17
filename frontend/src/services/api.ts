@@ -38,7 +38,7 @@ export interface NewUser {
 
 // API client setup
 const apiClient = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'http://localhost:5073/api',
   headers: {
     'Content-Type': 'application/json',
   },
