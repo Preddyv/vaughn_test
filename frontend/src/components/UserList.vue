@@ -1,46 +1,60 @@
 <template>
-  <div>
-    <h2>Users</h2>
-    <div v-if="loading" class="loading">Loading users...</div>
-    <div v-else-if="error" class="error">Error: {{ error }}</div>
-    <div v-else>
-      <ul>
-        <li v-for="user in users" :key="user.id">
-          {{ user.name }} - {{ user.email }}
-          <button @click="deleteUser(user.id)">Delete</button>
-        </li>
-      </ul>
-      <div v-if="users.length === 0" class="no-users">No users found.</div>
-    </div>
-    <form @submit.prevent="addUser">
-      <input v-model="newUser.name" placeholder="Name" required />
-      <input v-model="newUser.email" placeholder="Email" required />
-      <button type="submit" :disabled="loading">Add User</button>
-    </form>
-
-    <h2>Hotels</h2>
-    <div v-if="loadingHotels" class="loading">Loading hotels...</div>
-    <div v-else-if="hotelError" class="error">Error: {{ hotelError }}</div>
-    <div v-else class="hotels-list">
-      <div v-for="hotel in hotels" :key="hotel.name" class="hotel-item">
-        <div class="hotel-info">
-          <strong>{{ hotel.name }}</strong>
-          <span :class="hotel.isBooked ? 'booked' : 'available'">
-            {{ hotel.isBooked ? 'Booked' : 'Available' }}
-          </span>
-        </div>
-        <div class="hotel-location">
-          Location: {{ hotel.latitude }}, {{ hotel.longitude }}
-        </div>
-        <button 
-          @click="bookHotel(hotel)"
-          :disabled="hotel.isBooked || loading"
-          v-if="!hotel.isBooked"
-        >
-          Book Now
-        </button>
+  <div class="container">
+    <h1>User Management</h1>
+    
+    <!-- User List Section -->
+    <section>
+      <h2>Users</h2>
+      <div v-if="loading" class="loading">Loading users...</div>
+      <div v-else-if="error" class="error">{{ error }}</div>
+      <div v-else>
+        <ul>
+          <li v-for="user in users" :key="user.id">
+            <div class="user-info">
+              <strong>{{ user.name }}</strong>
+              <span>{{ user.email }}</span>
+            </div>
+            <button class="danger" @click="deleteUser(user.id)">Delete</button>
+          </li>
+        </ul>
+        <div v-if="users.length === 0" class="loading">No users found.</div>
       </div>
-    </div>
+
+      <form @submit.prevent="addUser" class="add-user-form">
+        <div class="form-group">
+          <input v-model="newUser.name" placeholder="Name" required />
+          <input v-model="newUser.email" placeholder="Email" required type="email" />
+        </div>
+        <button type="submit" :disabled="loading">Add User</button>
+      </form>
+    </section>
+
+    <!-- Hotels Section -->
+    <section>
+      <h2>Hotels</h2>
+      <div v-if="loadingHotels" class="loading">Loading hotels...</div>
+      <div v-else-if="hotelError" class="error">{{ hotelError }}</div>
+      <div v-else class="hotels-grid">
+        <div v-for="hotel in hotels" :key="hotel.name" class="hotel-card">
+          <div class="hotel-header">
+            <span class="hotel-name">{{ hotel.name }}</span>
+            <span :class="['status-badge', hotel.isBooked ? 'booked' : 'available']">
+              {{ hotel.isBooked ? 'Booked' : 'Available' }}
+            </span>
+          </div>
+          <div class="hotel-info">
+            <span>📍 Location: {{ formatCoordinates(hotel.latitude, hotel.longitude) }}</span>
+          </div>
+          <button 
+            v-if="!hotel.isBooked"
+            @click="bookHotel(hotel)"
+            :disabled="loading"
+          >
+            Book Now
+          </button>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -144,6 +158,10 @@ export default defineComponent({
       }
     };
 
+    const formatCoordinates = (lat: number, lng: number): string => {
+      return `${lat.toFixed(4)}°, ${lng.toFixed(4)}°`;
+    };
+
     onMounted(() => {
       fetchUsers();
       fetchHotels();
@@ -160,6 +178,7 @@ export default defineComponent({
       addUser,
       deleteUser,
       bookHotel,
+      formatCoordinates,
     };
   },
 });
@@ -253,5 +272,45 @@ button:disabled {
 button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+
+.user-info {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.user-info strong {
+  font-weight: 600;
+}
+
+.user-info span {
+  color: #64748b;
+}
+
+.form-group {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+}
+
+.add-user-form {
+  margin-top: 2rem;
+}
+
+@media (max-width: 640px) {
+  .form-group {
+    flex-direction: column;
+  }
+  
+  .hotels-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .user-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
 }
 </style>
