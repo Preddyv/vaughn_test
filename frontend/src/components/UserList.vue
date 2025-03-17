@@ -3,10 +3,49 @@
     <h1>User Management System</h1>
     
     <section>
-      <h2>Users</h2>
+      <div class="section-header">
+        <h2>Users</h2>
+        <div class="action-bar">
+          <button class="primary add-user-button" @click="showAddForm = !showAddForm">
+            <span class="plus-icon">+</span> Add New User
+          </button>
+        </div>
+      </div>
+
       <div v-if="loading" class="loading">Loading users...</div>
       <div v-else-if="error" class="error">{{ error }}</div>
       <div v-else>
+        <form v-show="showAddForm" @submit.prevent="addUser" class="form add-user-form">
+          <div class="form-header">
+            <h3>Add New User</h3>
+            <button type="button" class="close-button" @click="showAddForm = false">×</button>
+          </div>
+          <div class="form-grid">
+            <div class="input-group">
+              <label for="user-name">Name</label>
+              <input 
+                id="user-name"
+                v-model="newUser.name" 
+                placeholder="Enter name" 
+                required
+              />
+            </div>
+            <div class="input-group">
+              <label for="user-email">Email</label>
+              <input 
+                id="user-email"
+                v-model="newUser.email" 
+                type="email" 
+                placeholder="Enter email" 
+                required
+              />
+            </div>
+            <button type="submit" class="primary submit-button" :disabled="loading">
+              Add User
+            </button>
+          </div>
+        </form>
+
         <div class="table-container">
           <table class="data-table">
             <thead>
@@ -27,25 +66,6 @@
             </tbody>
           </table>
         </div>
-
-        <form @submit.prevent="addUser" class="form">
-          <div class="form-group">
-            <input 
-              v-model="newUser.name" 
-              placeholder="Enter name" 
-              required
-              aria-label="User name"
-            />
-            <input 
-              v-model="newUser.email" 
-              type="email" 
-              placeholder="Enter email" 
-              required
-              aria-label="User email"
-            />
-            <button type="submit" class="primary" :disabled="loading">Add User</button>
-          </div>
-        </form>
       </div>
     </section>
 
@@ -124,6 +144,7 @@ export default defineComponent({
     const loadingHotels = ref<boolean>(false);
     const error = ref<string | null>(null);
     const hotelError = ref<string | null>(null);
+    const showAddForm = ref(false);
 
     const fetchUsers = async () => {
       loading.value = true;
@@ -217,6 +238,7 @@ export default defineComponent({
       deleteUser,
       bookHotel,
       formatCoordinates,
+      showAddForm,
     };
   },
 });
@@ -333,7 +355,31 @@ button:disabled {
 }
 
 .add-user-form {
-  margin-top: 2rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 1.5rem;
+  border: 2px solid var(--primary-color);
+}
+
+.add-user-form h3 {
+  margin: 0 0 1rem 0;
+  color: var(--gray-800);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.plus-icon {
+  margin-right: 0.5rem;
+  font-weight: bold;
 }
 
 .table-container {
@@ -458,18 +504,142 @@ input:focus {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.action-bar {
+  display: flex;
+  gap: 1rem;
+}
+
+.add-user-button {
+  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.add-user-button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.add-user-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  border: none;
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--gray-600);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  line-height: 1;
+}
+
+.close-button:hover {
+  background-color: var(--gray-100);
+  color: var(--gray-800);
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-group label {
+  font-weight: 500;
+  color: var(--gray-700);
+  font-size: 0.875rem;
+}
+
+.submit-button {
+  align-self: flex-end;
+  font-size: 1rem;
+  padding: 0.75rem 2rem;
+  margin-top: 1.5rem;
+  width: auto;
+  min-width: 120px;
+}
+
+button.danger {
+  padding: 0.625rem 1.25rem;
+  background-color: white;
+  color: var(--danger-color);
+  border: 1px solid var(--danger-color);
+  transition: all 0.2s ease;
+}
+
+button.danger:hover {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+button.primary {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+button.primary:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 @media (max-width: 768px) {
-  .table-container {
-    overflow-x: auto;
-  }
-  
-  .form-group {
+  .section-header {
     flex-direction: column;
+    gap: 1rem;
     align-items: stretch;
   }
-  
-  button {
+
+  .action-bar {
+    flex-direction: column;
+  }
+
+  .add-user-button {
     width: 100%;
+    justify-content: center;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .submit-button {
+    width: 100%;
+    margin-top: 1rem;
   }
 }
 </style>
