@@ -92,6 +92,12 @@ namespace backend.Services
 
         public async Task<IEnumerable<User>> GetNearestUsersAsync(List<Hotel> hotels)
         {
+            // Ensure we have loaded users
+            if (!_users.Any())
+            {
+                await GetUsersAsync();
+            }
+
             var nearestUsers = new List<User>();
 
             foreach (var hotel in hotels)

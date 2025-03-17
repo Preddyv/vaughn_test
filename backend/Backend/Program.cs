@@ -1,4 +1,5 @@
 using backend.Services;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,19 @@ app.UseCors();
 app.UseRouting();
 app.UseHttpsRedirection();
 app.MapControllers();
+
+// Add root endpoint
+app.MapGet("/", () => Results.Ok(new
+{
+    message = "Vaughn Test API",
+    version = "1.0",
+    endpoints = new[]
+    {
+        "/api/users - Get all users",
+        "/api/users/nearest - Get nearest users for hotels",
+        "/api/users/book - Book a hotel"
+    }
+}));
 
 app.Run();
 

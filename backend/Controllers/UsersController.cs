@@ -64,8 +64,24 @@ namespace backend.Controllers
         }
 
         [HttpGet("nearest")]
-        public async Task<ActionResult<IEnumerable<User>>> GetNearestUsers([FromQuery] List<Hotel> hotels)
+        public async Task<ActionResult<IEnumerable<User>>> GetNearestUsers(
+            [FromQuery] string[] names,
+            [FromQuery] double[] latitudes,
+            [FromQuery] double[] longitudes)
         {
+            if (names == null || latitudes == null || longitudes == null ||
+                names.Length != latitudes.Length || latitudes.Length != longitudes.Length)
+            {
+                return BadRequest("Hotel parameters must be provided in equal lengths");
+            }
+
+            var hotels = names.Select((name, i) => new Hotel 
+            { 
+                Name = name, 
+                Latitude = latitudes[i], 
+                Longitude = longitudes[i] 
+            }).ToList();
+
             var nearestUsers = await _userService.GetNearestUsersAsync(hotels);
             return Ok(nearestUsers);
         }
