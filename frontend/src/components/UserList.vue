@@ -1,35 +1,41 @@
 <template>
   <div class="container">
-    <h1>User Management</h1>
+    <h1>User Management System</h1>
     
-    <!-- User List Section -->
     <section>
       <h2>Users</h2>
       <div v-if="loading" class="loading">Loading users...</div>
       <div v-else-if="error" class="error">{{ error }}</div>
-      <div v-else>
-        <ul>
-          <li v-for="user in users" :key="user.id">
-            <div class="user-info">
-              <strong>{{ user.name }}</strong>
-              <span>{{ user.email }}</span>
-            </div>
-            <button class="danger" @click="deleteUser(user.id)">Delete</button>
-          </li>
-        </ul>
-        <div v-if="users.length === 0" class="loading">No users found.</div>
+      <div v-else class="users-list">
+        <div v-for="user in users" :key="user.id" class="user-card">
+          <div class="user-info">
+            <span class="user-name">{{ user.name }}</span>
+            <span class="user-email">{{ user.email }}</span>
+          </div>
+          <button class="danger" @click="deleteUser(user.id)">Delete</button>
+        </div>
       </div>
 
-      <form @submit.prevent="addUser" class="add-user-form">
+      <form @submit.prevent="addUser" class="form">
         <div class="form-group">
-          <input v-model="newUser.name" placeholder="Name" required />
-          <input v-model="newUser.email" placeholder="Email" required type="email" />
+          <input 
+            v-model="newUser.name" 
+            placeholder="Enter name" 
+            required
+            aria-label="User name"
+          />
+          <input 
+            v-model="newUser.email" 
+            type="email" 
+            placeholder="Enter email" 
+            required
+            aria-label="User email"
+          />
         </div>
-        <button type="submit" :disabled="loading">Add User</button>
+        <button type="submit" class="primary" :disabled="loading">Add User</button>
       </form>
     </section>
 
-    <!-- Hotels Section -->
     <section>
       <h2>Hotels</h2>
       <div v-if="loadingHotels" class="loading">Loading hotels...</div>
@@ -38,15 +44,16 @@
         <div v-for="hotel in hotels" :key="hotel.name" class="hotel-card">
           <div class="hotel-header">
             <span class="hotel-name">{{ hotel.name }}</span>
-            <span :class="['status-badge', hotel.isBooked ? 'booked' : 'available']">
+            <span :class="['hotel-status', hotel.isBooked ? 'status-booked' : 'status-available']">
               {{ hotel.isBooked ? 'Booked' : 'Available' }}
             </span>
           </div>
-          <div class="hotel-info">
+          <div class="hotel-location">
             <span>📍 Location: {{ formatCoordinates(hotel.latitude, hotel.longitude) }}</span>
           </div>
           <button 
             v-if="!hotel.isBooked"
+            class="primary"
             @click="bookHotel(hotel)"
             :disabled="loading"
           >

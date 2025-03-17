@@ -17,10 +17,11 @@ export default defineComponent({
 
 #app {
   min-height: 100vh;
-  background-color: var(--background-color);
+  background-color: var(--gray-50);
 }
 
 main {
+  min-height: 100vh;
   padding: 2rem 0;
 }
 </style>
