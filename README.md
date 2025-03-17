@@ -53,6 +53,42 @@ The test suite includes the following test cases:
 
 Each test uses a mock HTTP client to simulate API calls and includes test data representing real-world scenarios.
 
+### Implemented Features
+
+#### Backend
+- User management API with CRUD operations
+- Hotel booking system with:
+  - List of available hotels
+  - Booking functionality
+  - Hotel availability status tracking
+- Nearest user calculation based on geographical coordinates
+- In-memory data persistence during runtime
+- CORS configuration for frontend integration
+
+#### Frontend
+- User list display with real-time updates
+- Add and delete user functionality
+- Hotel management interface showing:
+  - Hotel list with availability status
+  - Hotel booking capability
+  - Location information display
+- Loading states and error handling
+- Responsive grid layout for hotels
+- Real-time status updates after booking
+
+### API Endpoints
+
+#### Users
+- GET /api/users - Get all users
+- POST /api/users - Add a new user
+- PUT /api/users/{id} - Update a user
+- DELETE /api/users/{id} - Delete a user
+
+#### Hotels
+- GET /api/users/hotels - Get all hotels and their status
+- POST /api/users/book - Book a hotel
+- GET /api/users/nearest - Get nearest users for specified hotels
+
 ## Deliverables
 
 A repository containing:
@@ -124,3 +160,15 @@ A repository containing:
 
 - The repository has a `.gitignore` file that excludes build artifacts, binary files, and other non-source code files.
 - Only commit source code files, configuration files, and documentation to the repository.
+
+## Development Status
+
+All core requirements have been implemented, including:
+- ✅ User management system
+- ✅ Hotel booking system
+- ✅ Nearest user calculation
+- ✅ Frontend interface
+- ✅ Backend API endpoints
+- ✅ Error handling
+- ✅ Loading states
+- ✅ Responsive design
