@@ -87,8 +87,19 @@ export const updateUser = async (id: number, user: User): Promise<User> => {
 
 export const deleteUser = async (id: number): Promise<void> => {
   try {
-    await apiClient.delete(`/users/${id}`);
+    const response = await apiClient.delete(`/users/${id}`);
+    if (response.status !== 204) {
+      throw new Error(`Unexpected status code: ${response.status}`);
+    }
   } catch (error) {
-    handleApiError(error);
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response) {
+        throw new Error(`Failed to delete user: ${axiosError.response.status} - ${axiosError.response.statusText}`);
+      } else if (axiosError.request) {
+        throw new Error('No response received from the server. Please check your connection.');
+      }
+    }
+    throw new Error('An unexpected error occurred while deleting the user');
   }
 };

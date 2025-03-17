@@ -74,6 +74,12 @@ namespace backend.Services
 
         public async Task<bool> DeleteUserAsync(int id)
         {
+            // Ensure we have loaded users
+            if (!_users.Any())
+            {
+                await GetUsersAsync();
+            }
+
             var user = _users.FirstOrDefault(u => u.Id == id);
             if (user == null)
             {
