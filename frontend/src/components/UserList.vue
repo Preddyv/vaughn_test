@@ -17,12 +17,20 @@
       <input v-model="newUser.email" placeholder="Email" required />
       <button type="submit" :disabled="loading">Add User</button>
     </form>
+    <h2>Book a Hotel</h2>
+    <form @submit.prevent="bookHotel">
+      <input v-model="newHotel.name" placeholder="Hotel Name" required />
+      <input v-model="newHotel.latitude" placeholder="Latitude" required />
+      <input v-model="newHotel.longitude" placeholder="Longitude" required />
+      <button type="submit" :disabled="loading">Book Hotel</button>
+    </form>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 import { useUserStore } from '../store';
+import { bookHotel as apiBookHotel } from '../services/api';
 
 interface User {
   id: number;
@@ -35,12 +43,20 @@ interface NewUser {
   email: string;
 }
 
+interface Hotel {
+  name: string;
+  latitude: number;
+  longitude: number;
+  isBooked: boolean;
+}
+
 export default defineComponent({
   name: 'UserList',
   setup() {
     const userStore = useUserStore();
     const users = ref<User[]>([]);
     const newUser = ref<NewUser>({ name: '', email: '' });
+    const newHotel = ref<Hotel>({ name: '', latitude: 0, longitude: 0, isBooked: false });
     const loading = ref<boolean>(false);
     const error = ref<string | null>(null);
 
@@ -89,15 +105,31 @@ export default defineComponent({
       }
     };
 
+    const bookHotel = async () => {
+      loading.value = true;
+      error.value = null;
+
+      try {
+        await apiBookHotel(newHotel.value);
+        newHotel.value = { name: '', latitude: 0, longitude: 0, isBooked: false };
+      } catch (err) {
+        error.value = err instanceof Error ? err.message : 'An error occurred while booking the hotel';
+      } finally {
+        loading.value = false;
+      }
+    };
+
     onMounted(fetchUsers);
 
     return {
       users,
       newUser,
+      newHotel,
       loading,
       error,
       addUser,
       deleteUser,
+      bookHotel,
     };
   },
 });

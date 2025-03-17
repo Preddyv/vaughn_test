@@ -12,10 +12,12 @@ namespace backend.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IHotelBookingService _hotelBookingService;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, IHotelBookingService hotelBookingService)
         {
             _userService = userService;
+            _hotelBookingService = hotelBookingService;
         }
 
         [HttpGet]
@@ -66,6 +68,18 @@ namespace backend.Controllers
         {
             var nearestUsers = await _userService.GetNearestUsersAsync(hotels);
             return Ok(nearestUsers);
+        }
+
+        [HttpPost("book")]
+        public async Task<IActionResult> BookHotel([FromBody] Hotel hotel)
+        {
+            var result = await _hotelBookingService.BookHotelAsync(hotel);
+            if (!result)
+            {
+                return BadRequest("Hotel booking failed.");
+            }
+
+            return Ok("Hotel booked successfully.");
         }
     }
 }

@@ -36,6 +36,13 @@ export interface NewUser {
   email: string;
 }
 
+export interface Hotel {
+  name: string;
+  latitude: number;
+  longitude: number;
+  isBooked: boolean;
+}
+
 // API client setup
 const apiClient = axios.create({
   baseURL: 'http://localhost:5073/api',
@@ -101,5 +108,24 @@ export const deleteUser = async (id: number): Promise<void> => {
       }
     }
     throw new Error('An unexpected error occurred while deleting the user');
+  }
+};
+
+export const bookHotel = async (hotel: Hotel): Promise<void> => {
+  try {
+    const response = await apiClient.post('/users/book', hotel);
+    if (response.status !== 200) {
+      throw new Error(`Unexpected status code: ${response.status}`);
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response) {
+        throw new Error(`Failed to book hotel: ${axiosError.response.status} - ${axiosError.response.statusText}`);
+      } else if (axiosError.request) {
+        throw new Error('No response received from the server. Please check your connection.');
+      }
+    }
+    throw new Error('An unexpected error occurred while booking the hotel');
   }
 };
