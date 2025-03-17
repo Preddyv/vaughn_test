@@ -8,5 +8,7 @@ namespace backend.Models
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public bool IsBooked { get; set; }
+
+         public string? NearestUser { get; set; }
     }
 }

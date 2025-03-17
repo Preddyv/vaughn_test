@@ -60,6 +60,7 @@
               <tr>
                 <th>Hotel Name</th>
                 <th>Location</th>
+                <th>Nearest User</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
@@ -68,6 +69,8 @@
               <tr v-for="hotel in hotels" :key="hotel.name">
                 <td>{{ hotel.name }}</td>
                 <td>{{ formatCoordinates(hotel.latitude, hotel.longitude) }}</td>
+                <td>{{ hotel.nearestUser || 'N/A' }}</td>
+
                 <td>
                   <span :class="['status-badge', hotel.isBooked ? 'status-booked' : 'status-available']">
                     {{ hotel.isBooked ? 'Booked' : 'Available' }}
