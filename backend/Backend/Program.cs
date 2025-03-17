@@ -16,6 +16,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IHotelBookingService, HotelBookingService>();
 
 var app = builder.Build();
 
