@@ -17,20 +17,38 @@
       <input v-model="newUser.email" placeholder="Email" required />
       <button type="submit" :disabled="loading">Add User</button>
     </form>
-    <h2>Book a Hotel</h2>
-    <form @submit.prevent="bookHotel">
-      <input v-model="newHotel.name" placeholder="Hotel Name" required />
-      <input v-model="newHotel.latitude" placeholder="Latitude" required />
-      <input v-model="newHotel.longitude" placeholder="Longitude" required />
-      <button type="submit" :disabled="loading">Book Hotel</button>
-    </form>
+
+    <h2>Hotels</h2>
+    <div v-if="loadingHotels" class="loading">Loading hotels...</div>
+    <div v-else-if="hotelError" class="error">Error: {{ hotelError }}</div>
+    <div v-else class="hotels-list">
+      <div v-for="hotel in hotels" :key="hotel.name" class="hotel-item">
+        <div class="hotel-info">
+          <strong>{{ hotel.name }}</strong>
+          <span :class="hotel.isBooked ? 'booked' : 'available'">
+            {{ hotel.isBooked ? 'Booked' : 'Available' }}
+          </span>
+        </div>
+        <div class="hotel-location">
+          Location: {{ hotel.latitude }}, {{ hotel.longitude }}
+        </div>
+        <button 
+          @click="bookHotel(hotel)"
+          :disabled="hotel.isBooked || loading"
+          v-if="!hotel.isBooked"
+        >
+          Book Now
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 import { useUserStore } from '../store';
-import { bookHotel as apiBookHotel } from '../services/api';
+import { bookHotel as apiBookHotel, fetchHotels as apiFetchHotels } from '../services/api';
+import type { Hotel } from '../services/api';
 
 interface User {
   id: number;
@@ -43,22 +61,17 @@ interface NewUser {
   email: string;
 }
 
-interface Hotel {
-  name: string;
-  latitude: number;
-  longitude: number;
-  isBooked: boolean;
-}
-
 export default defineComponent({
   name: 'UserList',
   setup() {
     const userStore = useUserStore();
     const users = ref<User[]>([]);
     const newUser = ref<NewUser>({ name: '', email: '' });
-    const newHotel = ref<Hotel>({ name: '', latitude: 0, longitude: 0, isBooked: false });
+    const hotels = ref<Hotel[]>([]);
     const loading = ref<boolean>(false);
+    const loadingHotels = ref<boolean>(false);
     const error = ref<string | null>(null);
+    const hotelError = ref<string | null>(null);
 
     const fetchUsers = async () => {
       loading.value = true;
@@ -74,6 +87,19 @@ export default defineComponent({
       }
     };
 
+    const fetchHotels = async () => {
+      loadingHotels.value = true;
+      hotelError.value = null;
+      
+      try {
+        hotels.value = await apiFetchHotels();
+      } catch (err) {
+        hotelError.value = err instanceof Error ? err.message : 'An error occurred while fetching hotels';
+      } finally {
+        loadingHotels.value = false;
+      }
+    };
+
     const addUser = async () => {
       loading.value = true;
       error.value = null;
@@ -81,7 +107,6 @@ export default defineComponent({
       try {
         await userStore.addUser(newUser.value);
         newUser.value = { name: '', email: '' };
-        // Refresh the user list from store
         users.value = userStore.users;
       } catch (err) {
         error.value = err instanceof Error ? err.message : 'An error occurred while adding a user';
@@ -96,7 +121,6 @@ export default defineComponent({
       
       try {
         await userStore.deleteUser(id);
-        // Refresh the user list from store
         users.value = userStore.users;
       } catch (err) {
         error.value = err instanceof Error ? err.message : 'An error occurred while deleting a user';
@@ -105,13 +129,14 @@ export default defineComponent({
       }
     };
 
-    const bookHotel = async () => {
+    const bookHotel = async (hotel: Hotel) => {
       loading.value = true;
       error.value = null;
 
       try {
-        await apiBookHotel(newHotel.value);
-        newHotel.value = { name: '', latitude: 0, longitude: 0, isBooked: false };
+        await apiBookHotel(hotel);
+        // Refresh hotel list after booking
+        await fetchHotels();
       } catch (err) {
         error.value = err instanceof Error ? err.message : 'An error occurred while booking the hotel';
       } finally {
@@ -119,14 +144,19 @@ export default defineComponent({
       }
     };
 
-    onMounted(fetchUsers);
+    onMounted(() => {
+      fetchUsers();
+      fetchHotels();
+    });
 
     return {
       users,
+      hotels,
       newUser,
-      newHotel,
       loading,
+      loadingHotels,
       error,
+      hotelError,
       addUser,
       deleteUser,
       bookHotel,
@@ -176,6 +206,48 @@ input {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.hotels-list {
+  margin-top: 20px;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.hotel-item {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.hotel-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.hotel-location {
+  color: #666;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+.booked {
+  color: #e53935;
+  font-weight: bold;
+}
+
+.available {
+  color: #43a047;
+  font-weight: bold;
 }
 
 button:disabled {

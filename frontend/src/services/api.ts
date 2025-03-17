@@ -129,3 +129,12 @@ export const bookHotel = async (hotel: Hotel): Promise<void> => {
     throw new Error('An unexpected error occurred while booking the hotel');
   }
 };
+
+export const fetchHotels = async (): Promise<Hotel[]> => {
+  try {
+    const response = await apiClient.get<Hotel[]>('/users/hotels');
+    return response.data;
+  } catch (error) {
+    return handleApiError(error);
+  }
+};

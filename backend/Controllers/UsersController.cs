@@ -97,5 +97,12 @@ namespace backend.Controllers
 
             return Ok("Hotel booked successfully.");
         }
+
+        [HttpGet("hotels")]
+        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels()
+        {
+            var hotels = await _hotelBookingService.GetHotelsAsync();
+            return Ok(hotels);
+        }
     }
 }
